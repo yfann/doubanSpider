@@ -17,8 +17,10 @@ class DoubanuserSpider(scrapy.Spider):
             self.start +=self.step
 
     def parse(self, response):
-        userGroups = Selector(response).xpath('//div[@class="member-list"]')
-        for group in userGroups:
-            self.logger.info(group)
+        users = Selector(response).xpath('//div[@class="member-list"]/ul/li')
+        for user in users:
+            headUrl=user.xpath('//div[@class="pic"]/descendant::img/@src').extract()
+            userName=user.xpath('//div[@class="name"]/a/text()').extract()
+            userUrl=userName=user.xpath('//div[@class="name"]/a/@href').extract()
+            self.logger.info(userUrl)
         #self.logger.info('******************* %s',response.url)
-        pass
