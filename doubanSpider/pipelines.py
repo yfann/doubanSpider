@@ -6,6 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymongo
+import logging
 from scrapy.conf import settings
 
 class DoubanspiderPipeline(object):
@@ -19,5 +20,7 @@ class DoubanspiderPipeline(object):
         self.collection = db[settings['MONGODB_COLLECTION']]
 
     def process_item(self, item, spider):
-        self.collection.insert(dict(item))
+        #logging.warning('#####################{}'.format(item['user_id']))
+        self.collection.update({'user_id':item['user_id']}, dict(item),True)
+        #self.collection.insert(dict(item))
         return item

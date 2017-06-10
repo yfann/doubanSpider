@@ -21,9 +21,10 @@ class DoubanuserSpider(scrapy.Spider):
             self.start +=self.step
 
     def parse(self, response):
+        #self.logger.info('******************* %s',response.url)
         users = Selector(response).xpath('//div[@class="member-list"]/ul/li')
-        item = UserItem()
         for user in users:
+            item = UserItem()
             item['head_url']=user.xpath('.//div[@class="pic"]//img/@src').extract_first()
             item['user_name']=user.xpath('.//div[@class="name"]/a/text()').extract_first()
             item['user_url']=user.xpath('.//div[@class="name"]/a/@href').extract_first()
@@ -31,7 +32,7 @@ class DoubanuserSpider(scrapy.Spider):
             request = scrapy.Request(self.user_groupjoin_url.format(userid=item['user_id']),self.joinGroupParse)
             request.meta['item'] = item
             yield request
-        #self.logger.info('******************* %s',response.url)
+       
 
     def joinGroupParse(self,response):
         item = response.meta['item']
