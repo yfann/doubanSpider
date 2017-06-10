@@ -24,11 +24,11 @@ class DoubanuserSpider(scrapy.Spider):
         users = Selector(response).xpath('//div[@class="member-list"]/ul/li')
         item = DoubanspiderItem()
         for user in users:
-            item.head_url=user.xpath('.//div[@class="pic"]//img/@src').extract_first()
-            item.user_name=user.xpath('.//div[@class="name"]/a/text()').extract_first()
-            item.user_url=user.xpath('.//div[@class="name"]/a/@href').extract_first()
-            item.user_id = re.findall(r'(\d+)/$',user_url)[0]
-            request = scrapy.Request(self.user_groupjoin_url.format(userid=item.user_id),self.joinGroupParse)
+            item['head_url']=user.xpath('.//div[@class="pic"]//img/@src').extract_first()
+            item['user_name']=user.xpath('.//div[@class="name"]/a/text()').extract_first()
+            item['user_url']=user.xpath('.//div[@class="name"]/a/@href').extract_first()
+            item['user_id'] = re.findall(r'(\d+)/$',item['user_url'])[0]
+            request = scrapy.Request(self.user_groupjoin_url.format(userid=item['user_id']),self.joinGroupParse)
             request.meta['item'] = item
             yield request
         #self.logger.info('******************* %s',response.url)
@@ -48,5 +48,5 @@ class DoubanuserSpider(scrapy.Spider):
             }
             group_list.append(g)
 
-        item.joined_groups=group_list
+        item['joined_groups']=group_list
         yield item
