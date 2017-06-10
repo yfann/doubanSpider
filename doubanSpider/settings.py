@@ -92,7 +92,7 @@ ROBOTSTXT_OBEY = True
 #
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36' 
 
-ITEM_PIPELINES = ['stack.pipelines.DoubanspiderPipeline']
+ITEM_PIPELINES = {'doubanSpider.pipelines.DoubanspiderPipeline': 300,}
 MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
 MONGODB_DB = "scrapyDB"

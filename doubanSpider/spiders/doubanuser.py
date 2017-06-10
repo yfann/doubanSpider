@@ -2,7 +2,7 @@
 import scrapy
 import re
 from scrapy.selector import Selector
-from doubanSpider.items import DoubanspiderItem
+from doubanSpider.items import *
 
 class DoubanuserSpider(scrapy.Spider):
     name = 'doubanuser'
@@ -22,7 +22,7 @@ class DoubanuserSpider(scrapy.Spider):
 
     def parse(self, response):
         users = Selector(response).xpath('//div[@class="member-list"]/ul/li')
-        item = DoubanspiderItem()
+        item = UserItem()
         for user in users:
             item['head_url']=user.xpath('.//div[@class="pic"]//img/@src').extract_first()
             item['user_name']=user.xpath('.//div[@class="name"]/a/text()').extract_first()
@@ -38,15 +38,10 @@ class DoubanuserSpider(scrapy.Spider):
         groups = Selector(response).xpath('//div[contains(@class,"group-list")]/ul/li')
         group_list=[]
         for group in groups:
-            group_name = group.xpath('.//div[@class="info"]/div[@class="title"]/a/@title').extract_first()
-            group_url = group.xpath('.//div[@class="info"]/div[@class="title"]/a/@href').extract_first()
-            group_num = group.xpath('.//div[@class="info"]/span[@class="num"]/text()').extract_first().replace('(','').replace(')','')
-            g={
-                'group_name':group_name,
-                'group_url':group_url,
-                'group_num':group_num
-            }
+            g=UserGroupItem()
+            g['group_name'] = group.xpath('.//div[@class="info"]/div[@class="title"]/a/@title').extract_first()
+            g['group_url'] = group.xpath('.//div[@class="info"]/div[@class="title"]/a/@href').extract_first()
+            g['group_num'] = group.xpath('.//div[@class="info"]/span[@class="num"]/text()').extract_first().replace('(','').replace(')','')
             group_list.append(g)
-
         item['joined_groups']=group_list
         yield item
