@@ -12,13 +12,13 @@ class DoubanuserSpider(scrapy.Spider):
 
     start=0
     step=35
-
-    max_count=35
+    page_count=90
 
     def start_requests(self):
-        while self.start<self.max_count:
-            yield scrapy.Request(self.group_member_url.format(start=self.start),self.parse)
-            self.start +=self.step
+        current_page=22
+        while current_page<=self.page_count:
+            yield scrapy.Request(self.group_member_url.format(start=self.step*current_page),self.parse)
+            current_page +=1
 
     def parse(self, response):
         #self.logger.info('******************* %s',response.url)
