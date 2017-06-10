@@ -9,7 +9,8 @@ import scrapy
 
 
 class DoubanspiderItem(scrapy.Item):
-    name = scrapy.Field()
-    url = scrapy.Field()
-    headUrl = scrapy.Field()
-    groups = scrapy.Field()
+    user_id = scrapy.Field()
+    user_name = scrapy.Field()
+    user_url = scrapy.Field()
+    head_url = scrapy.Field()
+    joined_groups = scrapy.Field()
