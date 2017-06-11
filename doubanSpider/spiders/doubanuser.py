@@ -15,7 +15,7 @@ class DoubanuserSpider(scrapy.Spider):
     page_count=90
 
     def start_requests(self):
-        current_page=22
+        current_page=70
         while current_page<=self.page_count:
             yield scrapy.Request(self.group_member_url.format(start=self.step*current_page),self.parse)
             current_page +=1
