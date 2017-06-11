@@ -7,16 +7,16 @@ from doubanSpider.items import *
 class DoubanuserSpider(scrapy.Spider):
     name = 'doubanuser'
     allowed_domains = ['www.douban.com']
-    group_member_url='https://www.douban.com/group/559779/members?start={start}'
+    group_member_url='https://www.douban.com/group/gogo/members?start={start}'
     user_groupjoin_url='https://www.douban.com/group/people/{userid}/joins'
 
-    start=0
     step=35
-    page_count=90
+    page_count=995
 
     def start_requests(self):
-        current_page=70
+        current_page=0
         while current_page<=self.page_count:
+            self.logger.info('******* current page number:{} **********'.format(current_page))
             yield scrapy.Request(self.group_member_url.format(start=self.step*current_page),self.parse)
             current_page +=1
 

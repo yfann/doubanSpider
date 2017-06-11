@@ -1,2 +1,2 @@
 ## start
-+ `scrapy crawl doubanuser`
++ `scrapy crawl doubanuser --logfile=douban.log`
