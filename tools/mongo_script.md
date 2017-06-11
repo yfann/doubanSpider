@@ -10,5 +10,6 @@ db.getCollection('doubanUsers').aggregate([
        _id:{id:'$user_id',name:'$user_name'},
        groups:{$push:'$joined_groups.group_name'}
      }},
-     {$match:{groups:{$all:["穷游天下丨旅行 · 旅游","爱旅行爱摄影","上海租房"]}}}
+     {$match:{groups:{$all:["上海租房"]}}}
 ])
+
