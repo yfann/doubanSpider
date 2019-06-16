@@ -16,6 +16,7 @@ collection=client.dou.jiaoyou
 def scroll_times(times):
     for i in range(times + 1):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        print('scroll number:'+str(i))
         time.sleep(5)
 
 
@@ -25,7 +26,6 @@ def analyze_topic():
     bs=BeautifulSoup(html,'lxml')
 #     topics=bs.find_all(class_='topic-item item-status')
     topics=bs.select('.topic-item')
-    userlist=[]
     for topic in topics:
         user={}
         img_url_list=[]
@@ -35,14 +35,20 @@ def analyze_topic():
         user['url']=author['href']
         user['create_time']=parser.parse(time.text)
         desc=topic.find("p",class_='status-full')
-        user['desc']=desc.text
+        if desc is not None:
+            user['desc']=desc.text
+            user['note']=False
+        else:
+            desc=topic.find(class_='note-preview-content')
+            user['desc']=desc.text
+            user['note']=True
         imgs=topic.find_all(class_='img-wrapper')
         for img in imgs:
             img_tag=img.find('img')
             img_url_list.append(img_tag['src'])
         user['imgs']=img_url_list
-        userlist.append(user)
-    return userlist
+        save_to_mongo(user)
+
 
 def log_file():
     output_path = 'C:/backup/'
@@ -51,16 +57,41 @@ def log_file():
     with open(output,'wt',encoding="utf8") as f:
         f.write(str(driver.page_source))
 
-def save_to_mongo(data_list):
+def save_list_to_mongo(data_list):
     collection.insert_many(data_list)
+
+def save_to_mongo(data):
+    duplicate=is_duplicate(data)
+    if not duplicate:
+        collection.insert_one(data) 
+
+def is_duplicate(data):
+    one=collection.find_one({"url":data['url']}) 
+    existing=False
+    if one is None:
+        existing=False
+    else:
+        existing=True
+    return existing
+
+def drop():
+    driver.execute_script("window.scrollTo(0, 0);")
+    time.sleep(1)
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(8)
+    driver.execute_script("var root=document.getElementById('topic-items').childNodes[0];var i=root.childNodes.length-20;while (i>0) {root.removeChild(root.firstChild);i--;}")
 
 
 
 def run():
     time.sleep(5)
-    scroll_times(905)
-    log_file()
-    save_to_mongo(analyze_topic())
+#     scroll_times(905)
+#     log_file()
+    loop=1000
+    while loop>0:
+        analyze_topic()
+        drop()
+        loop=loop-1
     end=datetime.datetime.now()
     span=(end-start)
     print('total seconds:'+str(span.seconds))
