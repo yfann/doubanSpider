@@ -74,14 +74,28 @@ def is_duplicate(data):
         existing=True
     return existing
 
-def drop():
-    driver.execute_script("window.scrollTo(0, 0);")
+def drop(to):
+    driver.execute_script("window.scrollTo(0, "+str(to)+");")
     time.sleep(1)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(8)
+    loaded=check_loading()
+    if not loaded:
+        time.sleep(10)
+        drop("document.body.scrollHeight-500")
+
+def action():
+    drop(0)
     driver.execute_script("var root=document.getElementById('topic-items').childNodes[0];var i=root.childNodes.length-20;while (i>0) {root.removeChild(root.firstChild);i--;}")
 
-
+def check_loading():
+    html=driver.page_source
+    bs=BeautifulSoup(html,'lxml')
+    topics=bs.select('.topic-item')
+    loaded=False
+    if len(topics)>20:
+        loaded=True
+    return loaded
 
 def run():
     time.sleep(5)
@@ -90,7 +104,7 @@ def run():
     loop=1000
     while loop>0:
         analyze_topic()
-        drop()
+        action()
         loop=loop-1
     end=datetime.datetime.now()
     span=(end-start)

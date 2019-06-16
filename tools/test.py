@@ -15,3 +15,5 @@ import time
 # span=(end-start)
 # print('aa'+str(span.seconds))
 # print('asdf'+str(1))
+a=True
+print(not a)
