@@ -75,17 +75,17 @@ def is_duplicate(data):
     return existing
 
 def drop(to):
-    driver.execute_script("window.scrollTo(0, "+str(to)+");")
-    time.sleep(1)
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight-"+str(to)+");")
+    time.sleep(3)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(8)
     loaded=check_loading()
     if not loaded:
         time.sleep(10)
-        drop("document.body.scrollHeight-500")
+        drop(400)
 
 def action():
-    drop(0)
+    drop(600)
     driver.execute_script("var root=document.getElementById('topic-items').childNodes[0];var i=root.childNodes.length-20;while (i>0) {root.removeChild(root.firstChild);i--;}")
 
 def check_loading():
