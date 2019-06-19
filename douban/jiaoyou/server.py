@@ -2,8 +2,10 @@ from flask import Flask
 from flask import request
 from pymongo import MongoClient
 from bson.json_util import dumps
+from flask_cors import *
 
 app = Flask(__name__)
+CORS(app, resources=r'/*')
 client = MongoClient('localhost', 27017) 
 collection=client.dou.jiaoyou
 
