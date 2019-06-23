@@ -23,5 +23,12 @@ def find_desc():
 
 @app.route('/jiaoyou/all')
 def find_all():
-  results=collection.find()
+  results=collection.find().limit(10)
+  return dumps(results)
+
+@app.route('/jiaoyou/up', methods=['POST'])
+def update():
+  json=request.json
+  # json.pop('_id',None)
+  results=collection.update({'url':json['url']},json)
   return dumps(results)

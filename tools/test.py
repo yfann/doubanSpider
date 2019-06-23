@@ -15,5 +15,9 @@ import time
 # span=(end-start)
 # print('aa'+str(span.seconds))
 # print('asdf'+str(1))
-a=True
-print(not a)
+# a=True
+# print(not a)
+a={'b':1}
+print(a)
+a.pop('b',None)
+print(a)
