@@ -1,6 +1,8 @@
 import datetime
 from dateutil import parser
 import time
+import datetime
+print(datetime.datetime.now())
 # dt = parser.parse("2019-06-16 17:05:08")
 
 # print(dt.isoformat())
@@ -17,7 +19,7 @@ import time
 # print('asdf'+str(1))
 # a=True
 # print(not a)
-a={'b':1}
-print(a)
-a.pop('b',None)
-print(a)
+# a={'b':1}
+# print(a)
+# a.pop('b',None)
+# print(a)

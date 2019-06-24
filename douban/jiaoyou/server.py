@@ -3,6 +3,7 @@ from flask import request
 from pymongo import MongoClient
 from bson.json_util import dumps
 from flask_cors import *
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app, resources=r'/*')
@@ -30,5 +31,7 @@ def find_all():
 def update():
   json=request.json
   # json.pop('_id',None)
-  results=collection.update({'url':json['url']},json)
-  return dumps(results)
+  #.strftime('%Y-%m-%dT%H:%M:%S.000Z')
+  json['modified_time']=datetime.now()
+  results=collection.update_one({'url':json['url']},{'$set':json},upsert=False)
+  return ''
