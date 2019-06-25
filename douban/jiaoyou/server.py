@@ -18,8 +18,11 @@ def index():
 def find_desc():
   search = request.args.get('s')
   results='{}'
-  if search is not None:
-      results=dumps(collection.find({'desc':{'$regex':search}}))
+  if search!='':
+      col=collection.find({'$and':[{'desc':{'$regex':search}},{'invisible':{'$ne':True}}]})
+      # for item in col:
+      #     item['create_time']=item['create_time'].strftime('%Y-%m-%d %H:%M:%S')
+      results=dumps(col)
   return results
 
 @app.route('/jiaoyou/all')
