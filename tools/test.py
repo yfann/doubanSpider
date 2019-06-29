@@ -23,3 +23,6 @@ print(datetime.datetime.now())
 # print(a)
 # a.pop('b',None)
 # print(a)
+s='aa   bb dd ss ddd'.split(' ')
+keylist=[{'desc':{'$regex':k}} for k in s if k!='']
+print(keylist)

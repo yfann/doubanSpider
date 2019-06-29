@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from bson.json_util import dumps
 from flask_cors import *
 from datetime import datetime
+import pymongo
 
 app = Flask(__name__)
 CORS(app, resources=r'/*')
@@ -16,13 +17,20 @@ def index():
   
 @app.route('/jiaoyou')
 def find_desc():
-  search = request.args.get('s')
+  keys = request.args.get('s').split(' ')
+  hasPhoto = request.args.get('p')
   results='{}'
-  if search!='':
-      col=collection.find({'$and':[{'desc':{'$regex':search}},{'invisible':{'$ne':True}}]})
-      # for item in col:
-      #     item['create_time']=item['create_time'].strftime('%Y-%m-%d %H:%M:%S')
-      results=dumps(col)
+  keylist=[{'desc':{'$regex':k}} for k in keys if k != '']
+  searchParam={'$and':[{'$or':keylist},{'invisible':{'$ne':True}}]}
+  if hasPhoto=='true':
+      searchParam['$and'].append({'imgs':{"$not":{"$size": 0}}})
+      print(searchParam)
+  col=collection.find(searchParam).sort('create_time',pymongo.DESCENDING)
+  result_list=[]
+  for item in col:
+      item['create_time']=item['create_time'].strftime('%Y-%m-%d %H:%M:%S')
+      result_list.append(item)
+  results=dumps(result_list)
   return results
 
 @app.route('/jiaoyou/all')
